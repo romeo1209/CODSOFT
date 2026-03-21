@@ -9,7 +9,7 @@ root.geometry("320x460")
 data = ""
 history = []
 
-# ---------------- THEMES ----------------
+# THEMES --->
 
 dark_theme = {
     "bg": "#202020",
@@ -29,7 +29,7 @@ light_theme = {
 
 current_theme = dark_theme
 
-# ---------------- FUNCTIONS ----------------
+# FUNCTIONS --->
 
 def press(value):
     global data
@@ -84,14 +84,14 @@ def percent():
     except:
         display_var.set("Error")
 
-# ---------------- BUTTON FLASH ----------------
+# BUTTON FLASH--->
 
 def flash(btn):
     original = btn["bg"]
     btn.config(bg=current_theme["flash"])
     root.after(120, lambda: btn.config(bg=original))
 
-# ---------------- HISTORY ----------------
+# HISTORY --->
 
 def open_history():
     hist = Toplevel(root)
@@ -104,7 +104,7 @@ def open_history():
     for item in history:
         box.insert(END,item)
 
-# ---------------- KEYBOARD ----------------
+# KEYBOARD --->
 
 def key_input(event):
     key = event.char
@@ -120,7 +120,7 @@ def key_input(event):
 
 root.bind("<Key>", key_input)
 
-# ---------------- THEME SYSTEM ----------------
+# THEME SYSTEM--->
 
 def apply_theme(theme):
     global current_theme
@@ -142,7 +142,7 @@ def set_light():
     apply_theme(light_theme)
     theme_var.set("light")
 
-# ---------------- MENU ----------------
+#  MENU--->
 
 menu_bar = Menu(root)
 
@@ -168,7 +168,7 @@ menu_bar.add_cascade(label="Theme", menu=theme_menu)
 
 root.config(menu=menu_bar)
 
-# ---------------- DISPLAY ----------------
+#  DISPLAY --->
 
 display_var = StringVar()
 
@@ -182,7 +182,7 @@ display = Entry(
 
 display.grid(row=0,column=0,columnspan=4,sticky="nsew",padx=10,pady=10)
 
-# ---------------- HISTORY ICON ----------------
+#  HISTORY ICON --->
 
 history_btn = Button(
     root,
@@ -194,7 +194,7 @@ history_btn = Button(
 
 history_btn.grid(row=0,column=0,sticky="w",padx=5)
 
-# ---------------- BUTTON CREATOR ----------------
+#  BUTTON CREATOR--->
 
 buttons = []
 
@@ -218,7 +218,7 @@ def make_button(text,row,col,cmd):
 
     buttons.append(b)
 
-# ---------------- BUTTONS ----------------
+#  BUTTONS --->
 
 make_button("C",1,0,clear)
 make_button("⌫",1,1,backspace)
@@ -259,7 +259,7 @@ equal_button = Button(
 
 equal_button.grid(row=6,column=0,columnspan=4,sticky="nsew",padx=5,pady=10)
 
-# ---------------- GRID ----------------
+#  GRID--->
 
 for i in range(7):
     root.rowconfigure(i,weight=1)
