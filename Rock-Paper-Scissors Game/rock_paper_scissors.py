@@ -2,23 +2,17 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import random
 
-# -----------------------------
-# Window setup
-# -----------------------------
+
 root = tk.Tk()
 root.title("Rock Paper Scissors")
 root.geometry("620x540")
 root.resizable(False, False)
 
-# -----------------------------
-# Colors
-# -----------------------------
+
 BG_COLOR = "#FFC107"
 root.configure(bg=BG_COLOR)
 
-# -----------------------------
-# Canvas
-# -----------------------------
+
 canvas = tk.Canvas(
     root,
     width=600,
@@ -29,15 +23,11 @@ canvas = tk.Canvas(
 )
 canvas.pack(pady=2)
 
-# -----------------------------
-# Image sizes
-# -----------------------------
+
 TARGET_SIZE = (150, 150)
 BUTTON_SIZE = (100, 100)
 
-# -----------------------------
-# Load images
-# -----------------------------
+
 left_images = ["rock.jpeg", "paper.jpeg", "scissors.jpeg"]
 right_images = ["rock_mirror.jpeg", "paper_mirror.jpeg", "scissors_mirror.jpeg"]
 
@@ -46,7 +36,7 @@ right_hand_imgs = [ImageTk.PhotoImage(Image.open(img).resize(TARGET_SIZE)) for i
 button_images = [ImageTk.PhotoImage(Image.open(img).resize(BUTTON_SIZE)) for img in left_images]
 
 # -----------------------------
-# Hand positions
+# positions of hands
 # -----------------------------
 LEFT_X = 180
 RIGHT_X = 420
@@ -59,9 +49,7 @@ right_hand = canvas.create_image(RIGHT_X, RIGHT_Y, image=right_hand_imgs[0])
 canvas.create_text(LEFT_X, LEFT_Y - 100, text="PLAYER", font=("Arial",14,"bold"), fill="black")
 canvas.create_text(RIGHT_X, RIGHT_Y - 100, text="CPU", font=("Arial",14,"bold"), fill="black")
 
-# -----------------------------
-# Scores
-# -----------------------------
+
 player_score = 0
 computer_score = 0
 max_rounds = 0
@@ -82,16 +70,11 @@ score_label = tk.Label(
 
 
 score_label.pack()
-# horizontal line below scoreboard
-# divider = tk.Frame(root, height=2, width=600, bg="black")
-# divider.pack(pady=2)
-
-
 
 round_label = tk.Label(root,text="",font=("Arial",14,"bold"),bg=BG_COLOR)
 
 # -----------------------------
-# Round selection menu
+#  the menu of Round selection 
 # -----------------------------
 start_frame = tk.Frame(root, bg=BG_COLOR)
 start_frame.pack(pady=10)
@@ -104,9 +87,7 @@ start_label = tk.Label(
 )
 start_label.pack(pady=5)
 
-# -----------------------------
-# Reset hands
-# -----------------------------
+
 def reset_hands():
     canvas.coords(left_hand, LEFT_X, LEFT_Y)
     canvas.coords(right_hand, RIGHT_X, RIGHT_Y)
@@ -115,7 +96,7 @@ def reset_hands():
     canvas.itemconfig(right_hand, image=right_hand_imgs[0])
 
 # -----------------------------
-# Shake animation
+# Shake animation logic
 # -----------------------------
 def shake_hands(callback=None, step=0, steps=24):
 
@@ -139,9 +120,7 @@ def shake_hands(callback=None, step=0, steps=24):
 
 
 
-# -----------------------------
-# Round Counter Animation
-# -----------------------------
+
  
 def animate_round_text():
 
@@ -149,9 +128,7 @@ def animate_round_text():
 
     root.after(150, lambda: canvas.itemconfig("round_display", fill="black"))
 
-# -----------------------------
-# Reveal result
-# -----------------------------
+
 def reveal_result(player_choice_index):
 
     global player_score, computer_score, current_round
@@ -194,9 +171,7 @@ def reveal_result(player_choice_index):
 
     current_round += 1
 
-    # Early winner detection: if someone has won more than half the rounds,
-    # they cannot be beaten — declare the winner immediately.
-    # e.g. 3 rounds → 2 wins needed, 5 rounds → 3 wins, 9 rounds → 5 wins
+    
     wins_needed = max_rounds // 2 + 1
 
     if player_score >= wins_needed:
@@ -246,9 +221,7 @@ def enable_buttons():
     for btn in game_buttons:
         btn.config(state="normal")       
 
-# -----------------------------
-# Play round
-# -----------------------------
+
 def play_round(player_choice_index):
 
     if max_rounds == 0:
@@ -263,9 +236,7 @@ def play_round(player_choice_index):
     canvas.delete("result")
     shake_hands(lambda: reveal_result(player_choice_index))
 
-# -----------------------------
-# Start game
-# -----------------------------
+
 def start_game(rounds):
     global max_rounds,current_round,player_score,computer_score
 
@@ -289,12 +260,10 @@ def start_game(rounds):
 
     start_frame.pack_forget()
     button_frame.pack(pady=30)
-    enable_buttons()  # <-- make sure buttons are active
+    enable_buttons() 
 
 
-# ----------------------------- 
-# popup window
-# -----------------------------
+
 def show_winner_popup(text):
     popup = tk.Toplevel(root)
     popup.title("Game Over")
@@ -314,7 +283,7 @@ def show_winner_popup(text):
     popup.geometry(f"{popup_width}x{popup_height}+{pos_x}+{pos_y}")
     popup.resizable(False, False)
 
-    # make popup modal
+   
     popup.transient(root)
     popup.grab_set()
 
@@ -324,7 +293,7 @@ def show_winner_popup(text):
     button_frame_popup.pack(pady=10)
 
     def play_again():
-        popup.grab_release()  # release grab before destroying
+        popup.grab_release()  
         popup.destroy()
         restart_game()
 
@@ -359,13 +328,11 @@ def restart_game():
         
         button_frame.pack_forget()
 
-        # show round selection again
+        
         start_frame.pack(pady=10)
        
 
-# -----------------------------
-# Round buttons
-# -----------------------------
+
 tk.Button(start_frame,text="3 Rounds",font=("Arial",14),
           command=lambda:start_game(3)).pack(pady=3)
 
@@ -375,9 +342,7 @@ tk.Button(start_frame,text="5 Rounds",font=("Arial",14),
 tk.Button(start_frame,text="9 Rounds",font=("Arial",14),
           command=lambda:start_game(9)).pack(pady=3)
 
-# -----------------------------
-# Game buttons
-# -----------------------------
+
 button_frame = tk.Frame(root,bg=BG_COLOR)
 game_buttons = []
 
@@ -398,7 +363,5 @@ for i,img in enumerate(button_images):
     btn.grid(row=0,column=i,padx=10)
     game_buttons.append(btn)
 
-# -----------------------------
-# Run
-# -----------------------------
+
 root.mainloop()
