@@ -9,14 +9,14 @@ from PyQt6.QtCore import Qt
 
 app = QApplication(sys.argv)
 
-# --- Main Window ---
+
 window = QWidget()
 window.setWindowTitle("Floating Contact Book")
 
-# Set window size to match your images (512x512)
+
 window.setFixedSize(512, 512)
 
-# Make window frameless and transparent
+
 window.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
@@ -34,47 +34,46 @@ def mouseMoveEvent(event):
 window.mousePressEvent = mousePressEvent
 window.mouseMoveEvent = mouseMoveEvent
 
-# --- Real content sizes (snipped) ---
+
 cover_content_width = 291
 cover_content_height = 327
 page_content_width = 491
 page_content_height = 514
 
-# --- COVER IMAGE ---
+#COVER IMAGE --->
 cover = QLabel(window)
 cover_pixmap = QPixmap("images/cover.png")
 
-# Increase cover size a bit (e.g., 20% bigger)
+
 scale_factor = 1.2
-cover_width = int(cover_content_width * scale_factor)   # 291 * 1.2 ≈ 349
-cover_height = int(cover_content_height * scale_factor) # 327 * 1.2 ≈ 392
+cover_width = int(cover_content_width * scale_factor)   
+cover_height = int(cover_content_height * scale_factor) 
 
 cover_scaled = cover_pixmap.scaled(cover_width, cover_height,
                                    Qt.AspectRatioMode.KeepAspectRatio,
                                    Qt.TransformationMode.SmoothTransformation)
 
-# Center cover in window
+
 cover_x = (512 - cover_scaled.width()) // 2  + 15
 cover_y = (512 - cover_scaled.height()) // 2 
 
 cover.setPixmap(cover_scaled)
 cover.setGeometry(cover_x, cover_y, cover_scaled.width(), cover_scaled.height())
 
-# --- OPEN BUTTON ---
-open_button = QPushButton("Open Book", window)
-open_button.setGeometry(206, 460, 100, 30)  # centered at bottom
 
-# --- PAGES IMAGE ---
+open_button = QPushButton("Open Book", window)
+open_button.setGeometry(206, 460, 100, 30)  
+
+# PAGES IMAGE --->
 pages = QLabel(window)
 page_pixmap = QPixmap("images/pages.png")
 
-# Scale page to match cover content size visually
-# (We can use same width/height as cover so it aligns perfectly)
+
 page_scaled = page_pixmap.scaled(cover_scaled.width(), cover_scaled.height(),
                                  Qt.AspectRatioMode.KeepAspectRatio,
                                  Qt.TransformationMode.SmoothTransformation)
 
-# Center page in the window
+
 page_x = (512 - page_scaled.width()) // 2
 page_y = (512 - page_scaled.height()) // 2
 
@@ -82,7 +81,7 @@ pages.setPixmap(page_scaled)
 pages.setGeometry(page_x, page_y, page_scaled.width(), page_scaled.height())
 pages.hide()
 
-# --- PAGE 2 IMAGE ---
+#  PAGE 2 IMAGE -->
 pages2 = QLabel(window)
 page2_pixmap = QPixmap("images/pages_2.png")
 
@@ -97,7 +96,7 @@ pages2.setPixmap(page2_scaled)
 pages2.setGeometry(page_x, page_y, page2_scaled.width(), page2_scaled.height())
 pages2.hide()
 
-# --- ADD CONTACT FIELDS (aligned to page only) ---
+# CONTACT FIELDS--->
 
 name_field = QLineEdit(window)
 name_field.setPlaceholderText("Name")
@@ -124,12 +123,12 @@ save_button = QPushButton("Save Contact", window)
 save_button.setGeometry(page_x + 140, page_y + 240, 120, 32)
 save_button.hide()
 
-#next Button
+
 next_page_button = QPushButton("Next Page", window)
 next_page_button.setGeometry(page_x + 140, page_y + 310, 120, 32)
 next_page_button.hide()
 
-#previous Button
+
 prev_page_button = QPushButton("Previous Page", window)
 prev_page_button.setGeometry(page_x + 140, page_y + 350, 120, 32)
 prev_page_button.hide()
@@ -156,8 +155,7 @@ search_field.setGeometry(page_x + 115, page_y + 80, 170, 28)
 search_field.hide()
 
 
-# same X as name field
-# same Y as phone field (so it starts below search)
+
 
 
 
@@ -178,11 +176,11 @@ QPushButton:hover {
 }
 """)
 close_button.clicked.connect(app.quit)
-# close_button.hide()
+
 
 contacts = []
 
-# --- After defining contact_list ---
+
 contact_list = QListWidget(window)
 contact_list.setGeometry(page_x + 115, page_y + 120, 170, 110)
 contact_list.hide()
@@ -197,20 +195,20 @@ def refresh_contact_list():
     contact_list.clear()
 
     if not contacts:
-        # Placeholder when no contacts
+        
         placeholder_item = QListWidgetItem("No saved contacts")
-        placeholder_item.setFlags(Qt.ItemFlag.NoItemFlags)  # unselectable
+        placeholder_item.setFlags(Qt.ItemFlag.NoItemFlags)  
         placeholder_item.setForeground(Qt.GlobalColor.gray)
         placeholder_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
         contact_list.addItem(placeholder_item)
     else:
-        # Add real contacts
+        
         for contact in contacts:
             item = QListWidgetItem(contact["name"])
             contact_list.addItem(item)
 
 
-# Now call refresh
+
 refresh_contact_list()
 
 def save_contact():
@@ -219,7 +217,7 @@ def save_contact():
     email = email_field.text().strip()
     address = address_field.text().strip()
 
-    # Check if ALL fields are empty
+    
     if not name and not phone and not email and not address:
         success_label.setText("Error: All fields are empty")
         success_label.setStyleSheet("color: red; font-weight: bold;")
@@ -227,7 +225,7 @@ def save_contact():
         success_label.show()
         return
 
-    # Check empty fields
+    
     if name == "":
         success_label.setText("Name field has not been filled")
         success_label.setStyleSheet("color: red; font-weight: bold;")
@@ -256,14 +254,14 @@ def save_contact():
         success_label.show()
         return
 
-    # Phone validation
+    # Phone validation---->
     valid_phone = False
 
-    # Case 1: 10 digits
+    # Case 1: 10 digits ---->
     if phone.isdigit() and len(phone) == 10:
         valid_phone = True
 
-    # Case 2: +91 followed by 10 digits
+    # Case 2: +91 followed by 10 digits ---->
     elif phone.startswith("+91") and phone[3:].isdigit() and len(phone) == 13:
         valid_phone = True
 
@@ -276,7 +274,7 @@ def save_contact():
 
 
 
-    # Email validation
+    # Email validation ---->
     if not email.endswith("@gmail.com") or email.startswith("@"):
         success_label.setText("Invalid email")
         success_label.setStyleSheet("color: red; font-weight: bold;")
@@ -284,7 +282,7 @@ def save_contact():
         success_label.show()
         return
 
-    # Save contact
+    # Save contact ---->
     contacts.append({
         
         "name": name,
@@ -309,13 +307,13 @@ def save_contact():
 def open_book():
     open_button.hide()
 
-    # Show pages behind the cover first
+    
     pages.show()
     pages.lower()
 
-    # Animate cover shrinking (flip)
+    
     window.anim = QPropertyAnimation(cover, b"geometry")
-    window.anim.setDuration(900)  # slightly slower for smoother feel
+    window.anim.setDuration(900)  
     window.anim.setStartValue(cover.geometry())
 
     end_rect = QRect(
@@ -329,7 +327,7 @@ def open_book():
 
     window.anim.setEndValue(end_rect)
 
-    # Smooth motion
+   
     window.anim.setEasingCurve(QEasingCurve.Type.InOutCubic)
 
     def on_finished():
@@ -347,7 +345,7 @@ def open_book():
 
 
 
-        # Bring inputs above the page image
+        
         title_label.raise_()
         name_field.raise_()
         phone_field.raise_()
@@ -371,7 +369,7 @@ def open_page2():
     pages2.show()
     pages2.lower()
 
-    # hide page 1 widgets
+    # hide page 1 widgets to show 2nd page---->
     title_label.hide()
     name_field.hide()
     phone_field.hide()
@@ -381,7 +379,7 @@ def open_page2():
     success_label.hide()
     next_page_button.hide()
 
-    # show page 2 behind page 1 first
+    # show page 2 behind page 1 first---->
     pages2.show()
     pages2.raise_()
 
@@ -419,7 +417,7 @@ def open_page2():
 
 def go_back_page1():
 
-    # restore original sizes
+    
     pages.setGeometry(page_x, page_y, page_scaled.width(), page_scaled.height())
     pages2.setGeometry(page_x, page_y, page2_scaled.width(), page2_scaled.height())
 
@@ -457,7 +455,7 @@ def go_back_page1():
         search_field.hide()
         contact_list.hide()
 
-        # VERY IMPORTANT: bring widgets above page image
+        #  bring widgets above page image---->
         title_label.raise_()
         name_field.raise_()
         phone_field.raise_()
@@ -474,27 +472,27 @@ def go_back_page1():
 
 
 def show_contact_details_floating(item):
-    # --- Ignore placeholder click ---
+    
     if item.text() == "No saved contacts":
         return
 
-    # --- Close any previous floating window ---
+    
     if hasattr(window, "detail_window") and window.detail_window.isVisible():
         window.detail_window.close()
 
     name = item.text()
 
-    # find the contact
+    #  to find the contact---->
     for contact in contacts:
         if contact["name"] == name:
-            # Create a floating window as child of main window
+            # Creating a floating window as child of main window---->
             detail_window = QWidget()
             window.detail_window = detail_window  # store reference
             detail_window.setWindowTitle(f"{contact['name']} - Details")
             detail_window.setGeometry(150, 150, 320, 220)
             detail_window.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowStaysOnTopHint)
 
-            # --- Editable fields ---
+            # Editable fields---->
             name_edit = QLineEdit(contact['name'], detail_window)
             name_edit.setGeometry(20, 20, 280, 25)
             name_edit.setFocus()
@@ -508,7 +506,7 @@ def show_contact_details_floating(item):
             address_edit = QLineEdit(contact['address'], detail_window)
             address_edit.setGeometry(20, 125, 280, 25)
 
-            # --- Buttons ---
+            
             save_btn = QPushButton("Save", detail_window)
             save_btn.setGeometry(10, 180, 100, 30)
 
@@ -516,12 +514,12 @@ def show_contact_details_floating(item):
             delete_btn.setStyleSheet("background-color: red; color: white; font-weight: bold;")
             delete_btn.setGeometry(210, 180, 100, 30)
 
-            # --- Feedback label ---
+            
             saved_label = QLabel("", detail_window)
             saved_label.setGeometry(110, 180, 100, 20)
             saved_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-            # --- Delete function ---
+            # Delete function ---->
             def delete_contact():
                 reply = QMessageBox.question(
                 detail_window, "Confirm Delete",
@@ -529,31 +527,31 @@ def show_contact_details_floating(item):
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
             )
                 if reply == QMessageBox.StandardButton.Yes:
-                    # Remove from contacts list
+                    # Removes from contacts list---->
                     contacts.remove(contact)
 
                     refresh_contact_list()
 
                     
-                    # Close ONLY the floating window (no setParent)
+                    # Close ONLY the floating window ---->
                     detail_window.close()                                               
 
             delete_btn.clicked.connect(delete_contact)
 
-            # --- Save changes function ---
+            # Save changes function---->
             def save_changes():
                 new_name = name_edit.text().strip()
                 new_phone = phone_edit.text().strip()
                 new_email = email_edit.text().strip()
                 new_address = address_edit.text().strip()
 
-                # Validation
+                # Validations---->
                 if not new_name or not new_phone or not new_email or not new_address:
                     saved_label.setText("All fields required")
                     saved_label.setStyleSheet("color: red; font-weight: bold;")
                     return
 
-                # Phone validation
+                # Phone validation ---->
                 valid_phone = (new_phone.isdigit() and len(new_phone) == 10) or \
                               (new_phone.startswith("+91") and new_phone[3:].isdigit() and len(new_phone) == 13)
                 if not valid_phone:
@@ -561,13 +559,13 @@ def show_contact_details_floating(item):
                     saved_label.setStyleSheet("color: red; font-weight: bold;")
                     return
 
-                # Email validation
+                # Email validation ---->
                 if not new_email.endswith("@gmail.com") or new_email.startswith("@"):
                     saved_label.setText("Invalid email")
                     saved_label.setStyleSheet("color: red; font-weight: bold;")
                     return
 
-                # Update contact
+                # Updating the contacts---->
                 contact['name'] = new_name
                 contact['phone'] = new_phone
                 contact['email'] = new_email
@@ -583,7 +581,7 @@ def show_contact_details_floating(item):
 
             save_btn.clicked.connect(save_changes)
 
-            # --- Show floating window ---
+            
             detail_window.show()
             break
 
@@ -592,14 +590,14 @@ def show_contact_details_floating(item):
 def search_contact():
     search_text = search_field.text().strip().lower()
     
-    # Clear previous selection
+    
     contact_list.clearSelection()
     
-    # Loop through all items in the list
+    # Loop through all items in the list---->
     for i in range(contact_list.count()):
         item = contact_list.item(i)
-        if search_text == item.text().lower():  # exact match
-            contact_list.setCurrentItem(item)  # selects/highlights the item
+        if search_text == item.text().lower():  
+            contact_list.setCurrentItem(item)  
             contact_list.scrollToItem(item)
             break
 
