@@ -182,7 +182,7 @@ display = Entry(
 
 display.grid(row=0,column=0,columnspan=4,sticky="nsew",padx=10,pady=10)
 
-#  HISTORY ICON --->
+
 
 history_btn = Button(
     root,
