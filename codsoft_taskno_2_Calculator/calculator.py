@@ -1,4 +1,3 @@
-
 from tkinter import *
 import math
 
@@ -9,7 +8,7 @@ root.geometry("320x460")
 data = ""
 history = []
 
-# THEMES --->
+#  THEMES---> 
 
 dark_theme = {
     "bg": "#202020",
@@ -29,69 +28,80 @@ light_theme = {
 
 current_theme = dark_theme
 
-# FUNCTIONS --->
+#  FUNCTIONS ---> 
+
+def update_display(value):
+    display.config(state="normal")
+    display_var.set(value)
+    display.config(state="readonly")
 
 def press(value):
     global data
     data += str(value)
-    display_var.set(data)
+    update_display(data)
 
 def calculate():
     global data
     try:
-        result = str(eval(data))
+        for char in data:
+            if char not in "0123456789+-*/.()":
+                raise ValueError("Invalid input")
+
+        raw = eval(data)
+        result = int(raw) if isinstance(raw, float) and raw == int(raw) else round(raw, 10)
+        result = str(result)
         history.append(data + " = " + result)
-        display_var.set(result)
+        update_display(result)
         data = result
     except:
-        display_var.set("Error")
+        update_display("Error")
         data = ""
 
 def clear():
     global data
     data = ""
-    display_var.set("")
+    update_display("")
 
 def backspace():
     global data
     data = data[:-1]
-    display_var.set(data)
+    update_display(data)
 
 def square():
     global data
     try:
-        result = str(float(data)**2)
-        display_var.set(result)
+        result = str(eval(data)**2)
+        update_display(result)
         data = result
     except:
-        display_var.set("Error")
+        update_display("Error")
 
 def sqrt():
     global data
     try:
-        result = str(math.sqrt(float(data)))
-        display_var.set(result)
+        result = str(math.sqrt(eval(data)))
+        update_display(result)
         data = result
     except:
-        display_var.set("Error")
+        update_display("Error")
 
 def percent():
     global data
     try:
         result = str(float(data)/100)
-        display_var.set(result)
+        update_display(result)
         data = result
     except:
-        display_var.set("Error")
+        update_display("Error")
 
-# BUTTON FLASH--->
+#  BUTTON FLASH ---> 
 
 def flash(btn):
     original = btn["bg"]
     btn.config(bg=current_theme["flash"])
     root.after(120, lambda: btn.config(bg=original))
 
-# HISTORY --->
+#  HISTORY ---> 
 
 def open_history():
     hist = Toplevel(root)
@@ -104,30 +114,34 @@ def open_history():
     for item in history:
         box.insert(END,item)
 
-# KEYBOARD --->
+#  KEYBOARD ---> 
 
 def key_input(event):
     key = event.char
 
-    if key in "0123456789+-*/.":
-        press(key)
-
-    elif event.keysym == "Return":
+    if event.keysym == "Return":
         calculate()
 
     elif event.keysym == "BackSpace":
         backspace()
 
+    elif key and (key.isdigit() or key in "+-*/."):
+        press(key)
+
 root.bind("<Key>", key_input)
 
-# THEME SYSTEM--->
+#  THEME SYSTEM ---> 
 
 def apply_theme(theme):
     global current_theme
     current_theme = theme
 
     root.config(bg=theme["bg"])
-    display.config(bg=theme["bg"], fg=theme["fg"])
+    display.config(
+    readonlybackground=theme["bg"],
+    fg=theme["fg"],
+    insertbackground=theme["fg"]
+)
 
     for b in buttons:
         b.config(bg=theme["button"], fg=theme["fg"])
@@ -142,7 +156,7 @@ def set_light():
     apply_theme(light_theme)
     theme_var.set("light")
 
-#  MENU--->
+#  MENU ---> 
 
 menu_bar = Menu(root)
 
@@ -168,7 +182,7 @@ menu_bar.add_cascade(label="Theme", menu=theme_menu)
 
 root.config(menu=menu_bar)
 
-#  DISPLAY --->
+#  DISPLAY ---> 
 
 display_var = StringVar()
 
@@ -177,12 +191,16 @@ display = Entry(
     textvariable=display_var,
     font=("Segoe UI",24),
     bd=0,
-    justify="right"
+    justify="right",
+    state="readonly",
+    readonlybackground=current_theme["bg"],  
+    fg=current_theme["fg"],                  
+    insertbackground=current_theme["fg"]     
 )
 
 display.grid(row=0,column=0,columnspan=4,sticky="nsew",padx=10,pady=10)
 
-
+#  HISTORY ICON ---> 
 
 history_btn = Button(
     root,
@@ -194,7 +212,7 @@ history_btn = Button(
 
 history_btn.grid(row=0,column=0,sticky="w",padx=5)
 
-#  BUTTON CREATOR--->
+#  BUTTON CREATOR ---> 
 
 buttons = []
 
@@ -218,7 +236,7 @@ def make_button(text,row,col,cmd):
 
     buttons.append(b)
 
-#  BUTTONS --->
+#  BUTTONS ---> 
 
 make_button("C",1,0,clear)
 make_button("⌫",1,1,backspace)
@@ -259,7 +277,7 @@ equal_button = Button(
 
 equal_button.grid(row=6,column=0,columnspan=4,sticky="nsew",padx=5,pady=10)
 
-#  GRID--->
+#  GRID ---> 
 
 for i in range(7):
     root.rowconfigure(i,weight=1)
@@ -270,4 +288,3 @@ for i in range(4):
 apply_theme(dark_theme)
 
 root.mainloop()
-
