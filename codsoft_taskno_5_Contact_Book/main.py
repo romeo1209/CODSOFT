@@ -490,6 +490,7 @@ def show_contact_details_floating(item):
             window.detail_window = detail_window  # store reference
             detail_window.setWindowTitle(f"{contact['name']} - Details")
             detail_window.setGeometry(150, 150, 320, 220)
+            detail_window.setFixedSize(320, 220)
             detail_window.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowStaysOnTopHint)
 
             # Editable fields---->
